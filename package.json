@@ -1,0 +1,17 @@
+{
+	"name": "deepforgery",
+	"version": "1.0.0",
+	"description": "",
+	"author": "",
+	"scripts": {
+		"build": "esbuild src/isolated/index.ts --bundle --outfile=dist/isolated.js && esbuild src/main/index.ts --bundle --outfile=dist/main.js && esbuild src/background/index.ts --bundle --outfile=dist/background.js"
+	},
+	"license": "MIT",
+	"dependencies": {
+		"esbuild": "^0.20.0",
+		"random-seedable": "^1.0.8"
+	},
+	"devDependencies": {
+		"@types/chrome": "^0.0.260"
+	}
+}

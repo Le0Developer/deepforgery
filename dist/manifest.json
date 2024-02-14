@@ -1,0 +1,31 @@
+{
+	"name": "Deep Forgery",
+	"manifest_version": 3,
+	"version": "1.0.0",
+	"description": "Browser Fingerprint forgery.",
+	"permissions": ["cookies"],
+	"host_permissions": ["<all_urls>"],
+	"background": {
+		"service_worker": "background.js"
+	},
+	"content_scripts": [
+		{
+			"matches": ["<all_urls>"],
+			"js": ["isolated.js"],
+			"world": "ISOLATED",
+			"run_at": "document_start",
+			"all_frames": true,
+			"match_about_blank": true,
+			"match_origin_as_fallback": true
+		},
+		{
+			"matches": ["<all_urls>"],
+			"js": ["main.js"],
+			"world": "MAIN",
+			"run_at": "document_start",
+			"all_frames": true,
+			"match_about_blank": true,
+			"match_origin_as_fallback": true
+		}
+	]
+}

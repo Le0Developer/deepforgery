@@ -1,7 +1,14 @@
 import { hookFunction } from "../lib/hook-js";
+import { tryObtain } from "../lib/try-obtain";
 
-const original = sessionStorage.setItem;
-hookFunction(sessionStorage, "setItem", function () {
-	if (arguments[0].startsWith("@fpjs@")) return null;
-	return original.apply(this, arguments);
-});
+tryObtain(
+	() => sessionStorage,
+	(session) => {
+		const original = session.setItem;
+		hookFunction(session, "setItem", function () {
+			// the clients have caching using sessionStorage, so we just prevent them from doing it
+			if (arguments[0].startsWith("@fpjs@")) return null;
+			return original.apply(this, arguments);
+		});
+	},
+);

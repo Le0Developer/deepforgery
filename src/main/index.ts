@@ -1,6 +1,5 @@
 import "./audio";
 import "./canvas-data";
-import "./canvas-parameters";
 import "./codecs";
 import "./cookie";
 import "./localstorage";
@@ -10,4 +9,5 @@ import "./localstorage";
 // import "./font-preferences";
 import "./sessionstorage";
 import "./timezone";
+import "./webgl-parameters";
 // import "./worker";

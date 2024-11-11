@@ -1,4 +1,5 @@
 import { hookFunction } from "../lib/hook-js";
+import { log } from "../lib/log";
 
 const originalSupportedExtensions =
 	WebGLRenderingContext.prototype.getSupportedExtensions;
@@ -6,6 +7,10 @@ hookFunction(
 	WebGLRenderingContext.prototype,
 	"getSupportedExtensions",
 	function () {
+		log(
+			"webgl fingerprint",
+			"WebGLRenderingContext.prototype.getSupportedExtensions",
+		);
 		const result = originalSupportedExtensions.apply(this, arguments);
 		return result.filter(() => Math.random() > 0.8);
 	},
@@ -17,6 +22,10 @@ hookFunction(
 	WebGLRenderingContext.prototype,
 	"getContextAttributes",
 	function () {
+		log(
+			"webgl fingerprint",
+			"WebGLRenderingContext.prototype.getContextAttributes",
+		);
 		const result = originalContextAttributes.apply(
 			this,
 			arguments,
@@ -39,6 +48,10 @@ const SHADING_LANGUAGE_VERSION = 0x8b8c;
 
 const originalGetParameter = WebGLRenderingContext.prototype.getParameter;
 hookFunction(WebGLRenderingContext.prototype, "getParameter", function () {
+	log(
+		"webgl fingerprint",
+		`WebGLRenderingContext.prototype.getParameter(${arguments[0]})`,
+	);
 	if (
 		arguments[0] === VENDOR ||
 		arguments[0] === UNMASKED_VENDOR_WEBGL ||

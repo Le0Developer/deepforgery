@@ -1,10 +1,12 @@
 import { hookFunction } from "../lib/hook-js";
 import { PCG } from "random-seedable";
+import { log } from "../lib/log";
 
 const INSTANCE_SEED = (Math.random() * 0xffffffff) | 0;
 
 const originalToDataURL = HTMLCanvasElement.prototype.toDataURL;
 hookFunction(HTMLCanvasElement.prototype, "toDataURL", function () {
+	log("canvas fingerprint", "HTMLCanvasElement.prototype.toDataURL");
 	// const rng = new PCG(INSTANCE_SEED);
 	// console.log("modifying canvas data", INSTANCE_SEED);
 	//

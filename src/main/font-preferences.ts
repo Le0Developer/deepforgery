@@ -4,7 +4,6 @@ const original = HTMLElement.prototype.getBoundingClientRect;
 hookFunction(HTMLElement.prototype, "getBoundingClientRect", function () {
 	const result = original.apply(this, arguments);
 
-	console.log("HI FROM font-preferences.ts!");
 	if (isFontPreferencesSpan(this)) {
 		result.width += Math.random();
 	}

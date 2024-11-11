@@ -1,4 +1,5 @@
 import { hookFunction } from "../lib/hook-js";
+import { log } from "../lib/log";
 
 const originalOscillatorConnect = OscillatorNode.prototype.connect;
 hookFunction(OscillatorNode.prototype, "connect", function () {
@@ -11,6 +12,7 @@ hookFunction(OscillatorNode.prototype, "connect", function () {
 const originalDynamicsCompressorConnect =
 	DynamicsCompressorNode.prototype.connect;
 hookFunction(DynamicsCompressorNode.prototype, "connect", function () {
+	log("audio fingerprint", "DynamicsCompressorNode.prototype.connect");
 	if (
 		this.threshold.value === -70 &&
 		this.knee.value === 40 &&
@@ -26,6 +28,7 @@ hookFunction(DynamicsCompressorNode.prototype, "connect", function () {
 
 const originalFilterConnect = BiquadFilterNode.prototype.connect;
 hookFunction(BiquadFilterNode.prototype, "connect", function () {
+	log("audio fingerprint", "BiquadFilterNode.prototype.connect");
 	if (
 		this.type === "allpass" &&
 		this.frequency.value === 5.239622852977861 &&

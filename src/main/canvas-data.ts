@@ -38,3 +38,19 @@ hookFunction(HTMLCanvasElement.prototype, "toDataURL", function () {
 
 	return dataUrl.join("");
 });
+
+const originalMeasureText = CanvasRenderingContext2D.prototype.measureText;
+hookFunction(CanvasRenderingContext2D.prototype, "measureText", function () {
+	log("canvas fingerprint", "CanvasRenderingContext2D.prototype.measureText");
+
+	const result = originalMeasureText.apply(this, arguments) as TextMetrics;
+
+	for (let field in result) {
+		if (typeof result[field] === "number") {
+			result[field] =
+				Math.floor(result[field] * 1000) / 1000 + (Math.random() * 0.1 - 0.05);
+		}
+	}
+
+	return result;
+});

@@ -10,3 +10,4 @@ import "./localstorage";
 // import "./font-preferences";
 import "./sessionstorage";
 import "./timezone";
+// import "./worker";

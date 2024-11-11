@@ -7,12 +7,23 @@ hookFunction(OscillatorNode.prototype, "connect", function () {
 	return originalOscillatorConnect.apply(this, arguments);
 });
 
+const ranges = {
+	gain: [0, 1],
+	threshold: [-100, 0],
+	knee: [0, 40],
+	ratio: [1, 20],
+	attack: [0, 1],
+	release: [0, 1],
+};
+
 const originalDynamicsCompressorConnect =
 	DynamicsCompressorNode.prototype.connect;
 hookFunction(DynamicsCompressorNode.prototype, "connect", function () {
 	log("audio fingerprint", "DynamicsCompressorNode.prototype.connect");
 	for (const name of ["threshold", "knee", "ratio", "attack", "release"]) {
-		this[name].value += Math.random() * 2 - 1;
+		let newValue = this[name].value + Math.random() * 2 - 1;
+		newValue = Math.max(ranges[name][0], Math.min(ranges[name][1], newValue));
+		this[name].value = newValue;
 	}
 	return originalDynamicsCompressorConnect.apply(this, arguments);
 });

@@ -1,8 +1,5 @@
-// this is the best I can do currently
-// there is still a way to detect this with the following method:
-//   Object.setPrototypeOf(target, Object.create(target));
-// not hooked functions throw a TypeError due to cyclic prototype,
-// but it works just fine on a hooked function
+import { log } from "./log";
+
 export function hookFunction(
 	parent: { [key: string]: any },
 	name: string,
@@ -23,6 +20,13 @@ export function hookFunction(
 				});
 			}
 			return method;
+		},
+		setPrototypeOf: (target, proto) => {
+			log(
+				"hook-js",
+				`Object.setPrototypeOf called on hooked object ${parent.constructor.name}.${name}`,
+			);
+			throw new TypeError("Cyclic __proto__ value");
 		},
 	});
 }

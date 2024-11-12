@@ -16,12 +16,9 @@ hookFunction(
 	},
 );
 
-const originalContextAttributes =
-	WebGLRenderingContext.prototype.getContextAttributes;
-hookFunction(
-	WebGLRenderingContext.prototype,
-	"getContextAttributes",
-	function () {
+for (const context of [WebGLRenderingContext, WebGL2RenderingContext]) {
+	const originalContextAttributes = context.prototype.getContextAttributes;
+	hookFunction(context.prototype, "getContextAttributes", function () {
 		log(
 			"webgl fingerprint",
 			"WebGLRenderingContext.prototype.getContextAttributes",
@@ -36,35 +33,41 @@ hookFunction(
 			}
 		}
 		return result;
-	},
-);
+	});
 
-const VENDOR = 0x1f00;
-const RENDERER = 0x1f01;
-const VERSION = 0x1f02;
-const UNMASKED_VENDOR_WEBGL = 0x9245;
-const UNMASKED_RENDERER_WEBGL = 0x9246;
-const SHADING_LANGUAGE_VERSION = 0x8b8c;
+	const VENDOR = 0x1f00;
+	const RENDERER = 0x1f01;
+	const VERSION = 0x1f02;
+	const UNMASKED_VENDOR_WEBGL = 0x9245;
+	const UNMASKED_RENDERER_WEBGL = 0x9246;
+	const SHADING_LANGUAGE_VERSION = 0x8b8c;
 
-const originalGetParameter = WebGLRenderingContext.prototype.getParameter;
-hookFunction(WebGLRenderingContext.prototype, "getParameter", function () {
-	log(
-		"webgl fingerprint",
-		`WebGLRenderingContext.prototype.getParameter(${arguments[0]})`,
-	);
-	if (
-		arguments[0] === VENDOR ||
-		arguments[0] === UNMASKED_VENDOR_WEBGL ||
-		arguments[0] === VERSION ||
-		arguments[0] === RENDERER ||
-		arguments[0] === UNMASKED_RENDERER_WEBGL ||
-		arguments[0] === SHADING_LANGUAGE_VERSION
-	) {
-		return Array(20)
-			.fill("")
-			.map(() => String.fromCharCode((97 + Math.random() * 26) | 0))
-			.join("");
-	}
-	const result = originalGetParameter.apply(this, arguments);
-	return result;
-});
+	const cache = {};
+
+	const originalGetParameter = context.prototype.getParameter;
+	hookFunction(context.prototype, "getParameter", function () {
+		log(
+			"webgl fingerprint",
+			`WebGLRenderingContext.prototype.getParameter(${arguments[0]})`,
+		);
+		const parameter = arguments[0];
+		if (
+			parameter === VENDOR ||
+			parameter === UNMASKED_VENDOR_WEBGL ||
+			parameter === VERSION ||
+			parameter === RENDERER ||
+			parameter === UNMASKED_RENDERER_WEBGL ||
+			parameter === SHADING_LANGUAGE_VERSION
+		) {
+			if (!cache[parameter])
+				cache[parameter] = Array(20)
+					.fill("")
+					.map(() => String.fromCharCode((97 + Math.random() * 26) | 0))
+					.join("");
+			console.log(cache[parameter]);
+			return cache[parameter];
+		}
+		const result = originalGetParameter.apply(this, arguments);
+		return result;
+	});
+}
